@@ -54,6 +54,7 @@ export function registerConnectTools() {
           username,
           password,
           version,
+          checkTimeoutInterval: 60000, // Increase timeout check to 60 seconds to prevent false positives
         }
 
         // Create the bot
