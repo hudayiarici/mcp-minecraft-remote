@@ -62,6 +62,26 @@ export function registerConnectTools() {
         // Add pathfinder plugin to the bot
         bot.loadPlugin(pathfinder)
 
+        // Add permanent event listeners for disconnection and errors
+        bot.on('kicked', (reason) => {
+          console.error(`Bot was kicked: ${reason}`)
+          updateConnectionState(false, null)
+        })
+
+        bot.on('end', (reason) => {
+          console.error(`Bot disconnected: ${reason}`)
+          updateConnectionState(false, null)
+        })
+
+        bot.on('error', (err) => {
+          console.error(`Bot error: ${err}`)
+          if (!botState.isConnected) {
+            // If error happens during connection, it will be handled by the once('error') below
+            return
+          }
+          // For errors after connection
+        })
+
         return new Promise<ToolResponse>((resolve) => {
           // When login is successful
           bot.once('spawn', () => {
@@ -73,21 +93,27 @@ export function registerConnectTools() {
             )
           })
 
-          // When an error occurs
+          // When an error occurs during initial connection
           bot.once('error', (err) => {
             updateConnectionState(false, null)
             resolve(createErrorResponse(err))
           })
 
-          // Timeout handling (if connection is not established after 10 seconds)
+          // Timeout handling (if connection is not established after 20 seconds)
           setTimeout(() => {
             if (!botState.isConnected) {
               updateConnectionState(false, null)
+              // We should probably quit the bot if it timed out to prevent it from ghosting
+              try {
+                  bot.quit()
+              } catch (e) {
+                  // Ignore error if bot is already gone
+              }
               resolve(
-                createSuccessResponse('Connection timed out after 10 seconds')
+                createSuccessResponse('Connection timed out after 20 seconds')
               )
             }
-          }, 10000)
+          }, 20000)
         })
       } catch (error) {
         return createErrorResponse(error)
