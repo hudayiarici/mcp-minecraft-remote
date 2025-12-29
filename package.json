@@ -6,7 +6,7 @@
   "types": "build/index.d.ts",
   "type": "module",
   "bin": {
-    "minecraft-remote": "./build/index.js"
+    "minecraft-remote": "build/index.js"
   },
   "scripts": {
     "build": "tsc && chmod 755 build/index.js",
@@ -44,8 +44,8 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.7.0",
-    "mineflayer": "^4.19.0",
+    "@modelcontextprotocol/sdk": "^1.25.1",
+    "mineflayer": "^4.33.0",
     "mineflayer-pathfinder": "^2.4.5",
     "zod": "^4.0.5"
   }
