@@ -57,11 +57,14 @@ export function registerConnectTools() {
           checkTimeoutInterval: 60000, // Increase timeout check to 60 seconds to prevent false positives
         }
 
+        console.error(`Attempting to connect to ${host}:${port} as ${username} (version: ${version || 'auto'})`)
+
         // Create the bot
         const bot = createBot(options)
 
         // Add pathfinder plugin to the bot
         bot.loadPlugin(pathfinder)
+        console.error('Pathfinder plugin loaded')
 
         // Add permanent event listeners for disconnection and errors
         bot.on('kicked', (reason) => {
@@ -75,12 +78,19 @@ export function registerConnectTools() {
         })
 
         bot.on('error', (err) => {
-          console.error(`Bot error: ${err}`)
+          console.error(`Bot error event: ${err}`)
           if (!botState.isConnected) {
             // If error happens during connection, it will be handled by the once('error') below
             return
           }
-          // For errors after connection
+        })
+
+        bot.on('login', () => {
+            console.error('Bot logged in successfully')
+        })
+
+        bot.on('spawn', () => {
+            console.error('Bot spawned in the world')
         })
 
         return new Promise<ToolResponse>((resolve) => {
@@ -96,6 +106,7 @@ export function registerConnectTools() {
 
           // When an error occurs during initial connection
           bot.once('error', (err) => {
+            console.error(`Initial connection error: ${err}`)
             updateConnectionState(false, null)
             resolve(createErrorResponse(err))
           })

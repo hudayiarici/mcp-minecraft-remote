@@ -56,16 +56,20 @@ export function registerMovementTools() {
         // Set target position
         const goal = new goals.GoalBlock(x, y, z)
 
+        const bot = botState.bot
         return new Promise<ToolResponse>((resolve) => {
           // Start movement
-          botState
-            .bot!.pathfinder.goto(goal)
+          bot.pathfinder.goto(goal)
             .then(() => {
-              resolve(
-                createSuccessResponse(
-                  `Successfully moved to X=${x}, Y=${y}, Z=${z}`
+              if (botState.bot === bot) {
+                resolve(
+                  createSuccessResponse(
+                    `Successfully moved to X=${x}, Y=${y}, Z=${z}`
+                  )
                 )
-              )
+              } else {
+                resolve(createErrorResponse('Bot disconnected during movement'))
+              }
             })
             .catch((err) => {
               resolve(createErrorResponse(err))
