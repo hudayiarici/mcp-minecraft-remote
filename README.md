@@ -1,5 +1,5 @@
 [![smithery badge](https://smithery.ai/badge/@hudayiarici/mcp-minecraft-remote)](https://smithery.ai/server/@hudayiarici/mcp-minecraft-remote)
-[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/hudayiarici-mcp-minecraft-remote-badge.png)](https://mseep.ai/app/hudayiarici-mcp-minecraft-remote)
+
 
 # MCP Minecraft Remote
 
