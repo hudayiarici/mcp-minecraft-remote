@@ -27,6 +27,7 @@ Minecraft Remote Control using MCP (Model Context Protocol).
   - `moveToPlayer`: Can dynamically find and travel to a specific player's moving position.
   - Includes announcement capability to notify players in chat before moving.
 - **Auto-Eat (Survival):** The `eat` tool intelligently manages hunger. It won't waste food if hunger is full and automatically selects the best available food from the inventory.
+- **Smart Resource Collection:** The `collectBlocks` tool uses "Vein Mining" logic. When cutting a tree or mining an ore vein, it smartly checks connected blocks (prioritizing vertical for trees) instead of blindly searching the world, making it much more efficient.
 
 ## Installation
 
@@ -139,6 +140,7 @@ If you've cloned the repository locally:
 
 - `digBlock`: Mine a block at specific coordinates
 - `placeBlock`: Place a block at specific coordinates
+- `collectBlocks`: Smartly collect blocks of a specific type (e.g. "oak_log") using vein-mining logic (follows connected blocks).
 
 #### Inventory Management
 

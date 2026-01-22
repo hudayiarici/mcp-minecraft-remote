@@ -12,33 +12,35 @@ import { registerMovementTools } from './movement.js'
 import { registerTradingTools } from './trading.js'
 import { registerCollectionTools } from './collection.js'
 import { registerSurvivalTools } from './survival.js'
+import { registerResourceTools } from './resources.js'
 
 // Function to register all tools
 export function registerAllTools(): void {
   // Core tools
   registerConnectTools()
   registerChatTools()
-  
+
   // Movement tools
   registerMovementTools()
   registerBasicMovementTools()
-  
+
   // Block interaction
   registerBlockTools()
   registerCollectionTools()
   registerSurvivalTools()
-  
+  registerResourceTools()
+
   // Information tools
   registerInfoTools()
 
-  
+
   // Inventory tools
   registerInventoryTools()
   registerInventoryManagementTools()
-  
+
   // Entity interaction
   registerEntityInteractionTools()
-  
+
   // Advanced features
   registerContainerInteractionTools()
   registerCraftingTools()

@@ -27,6 +27,7 @@ MCP (Model Bağlam Protokolü) kullanarak Minecraft Uzaktan Kontrolü.
   - `moveToPlayer`: Belirli bir oyuncunun hareketli konumunu dinamik olarak bulup yanına gidebilir.
   - Hareket etmeden önce sohbette oyunculara bildirim gönderme özelliği (duyuru) içerir.
 - **Otomatik Yemek (Hayatta Kalma):** `eat` aracı açlığı akıllıca yönetir. Açlık doluysa yemeği israf etmez ve envanterden en uygun yiyeceği otomatik olarak seçer.
+- **Akıllı Kaynak Toplama:** `collectBlocks` aracı "Damar Kazma" (Vein Mining) mantığını kullanır. Bir ağacı keserken veya maden damarını kazarken, körü körüne dünyayı aramak yerine akıllıca bitişik blokları (ağaçlar için dikey öncelikli) kontrol eder, bu da onu çok daha verimli hale getirir.
 
 ## Kurulum
 
@@ -139,6 +140,7 @@ Eğer depoyu yerel olarak klonladıysanız:
 
 - `digBlock`: Belirli koordinatlardaki bir bloğu kaz
 - `placeBlock`: Belirli koordinatlara bir blok yerleştir
+- `collectBlocks`: "Damar kazma" mantığını kullanarak (bağlantılı blokları takip eder) belirli türdeki blokları (örn. "oak_log") akıllıca topla.
 
 #### Envanter Yönetimi
 
