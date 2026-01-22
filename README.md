@@ -19,6 +19,15 @@ Minecraft Remote Control using MCP (Model Context Protocol).
 - Item crafting and villager trading
 - Detailed inventory management
 
+### Smart Features & Autonomous Capabilities
+
+- **Stuck Detection & Recovery:** The bot intelligently detects if it's stuck while moving. If it cannot make progress, it cancels the operation and suggests solutions (jumping, digging).
+- **Death Handling:** If the bot dies while performing a task, it immediately stops, reports its death location, and protects itself from getting into a broken state.
+- **Smart Movement:** 
+  - `moveToPlayer`: Can dynamically find and travel to a specific player's moving position.
+  - Includes announcement capability to notify players in chat before moving.
+- **Auto-Eat (Survival):** The `eat` tool intelligently manages hunger. It won't waste food if hunger is full and automatically selects the best available food from the inventory.
+
 ## Installation
 
 ### Installing via Smithery
