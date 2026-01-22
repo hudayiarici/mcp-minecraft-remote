@@ -21,16 +21,16 @@
     "model-context-protocol",
     "ai-assistant"
   ],
-  "author": "nacal",
+  "author": "Hüdayi ARICI",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nacal/mcp-minecraft-remote.git"
+    "url": "git+https://github.com/hudayiarici/mcp-minecraft-remote.git"
   },
   "bugs": {
-    "url": "https://github.com/nacal/mcp-minecraft-remote/issues"
+    "url": "https://github.com/hudayiarici/mcp-minecraft-remote/issues"
   },
-  "homepage": "https://github.com/nacal/mcp-minecraft-remote",
+  "homepage": "https://github.com/hudayiarici/mcp-minecraft-remote",
   "files": [
     "build",
     "README.md",
