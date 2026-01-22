@@ -1,4 +1,4 @@
-[![smithery badge](https://smithery.ai/badge/@hudayiarici/mcp-minecraft-remote)](https://smithery.ai/server/@hudayiarici/mcp-minecraft-remote)
+
 
 
 # MCP Minecraft Remote (MCP Minecraft Uzaktan Kontrol)
@@ -31,18 +31,10 @@ MCP (Model Bağlam Protokolü) kullanarak Minecraft Uzaktan Kontrolü.
 
 ## Kurulum
 
-### Smithery ile Kurulum
-
-Minecraft Remote Control'ü Claude Desktop için [Smithery](https://smithery.ai/server/@hudayiarici/mcp-minecraft-remote) aracılığıyla otomatik olarak kurmak için:
+### Hızlı Kurulum
 
 ```bash
-npx -y @smithery/cli install @hudayiarici/mcp-minecraft-remote --client claude
-```
-
-### Hızlı Kurulum (Önerilen)
-
-```bash
-npx -y @smithery/cli install mcp-minecraft-remote --client claude
+npx -y mcp-minecraft-remote@latest
 ```
 
 Kurulumu tamamlamak için CLI komutlarını takip edin.

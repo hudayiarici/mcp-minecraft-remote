@@ -1,4 +1,4 @@
-[![smithery badge](https://smithery.ai/badge/@hudayiarici/mcp-minecraft-remote)](https://smithery.ai/server/@hudayiarici/mcp-minecraft-remote)
+
 
 
 # MCP Minecraft Remote
@@ -31,19 +31,12 @@ Minecraft Remote Control using MCP (Model Context Protocol).
 
 ## Installation
 
-### Installing via Smithery
-
-To install Minecraft Remote Control for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@hudayiarici/mcp-minecraft-remote):
-
-```bash
-npx -y @smithery/cli install @hudayiarici/mcp-minecraft-remote --client claude
-```
-
 ### Quick Install (Recommended)
 
 ```bash
-npx -y @smithery/cli install mcp-minecraft-remote --client claude
+npx -y mcp-minecraft-remote@latest
 ```
+
 
 Follow the CLI prompts to complete the setup.
 
