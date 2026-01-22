@@ -1,5 +1,5 @@
-[![smithery badge](https://smithery.ai/badge/@nacal/mcp-minecraft-remote)](https://smithery.ai/server/@nacal/mcp-minecraft-remote)
-[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/nacal-mcp-minecraft-remote-badge.png)](https://mseep.ai/app/nacal-mcp-minecraft-remote)
+[![smithery badge](https://smithery.ai/badge/@hudayiarici/mcp-minecraft-remote)](https://smithery.ai/server/@hudayiarici/mcp-minecraft-remote)
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/hudayiarici-mcp-minecraft-remote-badge.png)](https://mseep.ai/app/hudayiarici-mcp-minecraft-remote)
 
 # MCP Minecraft Remote
 
@@ -23,10 +23,10 @@ Minecraft Remote Control using MCP (Model Context Protocol).
 
 ### Installing via Smithery
 
-To install Minecraft Remote Control for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@nacal/mcp-minecraft-remote):
+To install Minecraft Remote Control for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@hudayiarici/mcp-minecraft-remote):
 
 ```bash
-npx -y @smithery/cli install @nacal/mcp-minecraft-remote --client claude
+npx -y @smithery/cli install @hudayiarici/mcp-minecraft-remote --client claude
 ```
 
 ### Quick Install (Recommended)
@@ -44,7 +44,7 @@ Follow the CLI prompts to complete the setup.
 npm install -g mcp-minecraft-remote
 
 # Or clone the repository
-git clone https://github.com/nacal/mcp-minecraft-remote.git
+git clone https://github.com/hudayiarici/mcp-minecraft-remote.git
 cd mcp-minecraft-remote
 
 # Install dependencies
