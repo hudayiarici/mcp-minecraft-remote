@@ -93,6 +93,36 @@ export function registerConnectTools() {
             console.error('Bot spawned in the world')
         })
 
+        bot.on('death', () => {
+            console.error('Bot died! Respawning...')
+            if (bot.entity) {
+                botState.lastDeath = {
+                    position: bot.entity.position.clone(),
+                    time: new Date()
+                }
+            }
+        })
+
+        // Chat listener
+        bot.on('chat', (username, message) => {
+            if (username === bot.username) return
+            
+            const logEntry = {
+                sender: username,
+                message: message,
+                timestamp: new Date()
+            }
+            
+            botState.chatHistory.push(logEntry)
+            
+            // Keep only last 50 messages
+            if (botState.chatHistory.length > 50) {
+                botState.chatHistory.shift()
+            }
+            
+            console.error(`[CHAT] <${username}> ${message}`)
+        })
+
         return new Promise<ToolResponse>((resolve) => {
           // When login is successful
           bot.once('spawn', () => {

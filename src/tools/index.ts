@@ -10,6 +10,8 @@ import { registerInventoryTools } from './inventory.js'
 import { registerInventoryManagementTools } from './inventoryManagement.js'
 import { registerMovementTools } from './movement.js'
 import { registerTradingTools } from './trading.js'
+import { registerCollectionTools } from './collection.js'
+import { registerSurvivalTools } from './survival.js'
 
 // Function to register all tools
 export function registerAllTools(): void {
@@ -23,9 +25,12 @@ export function registerAllTools(): void {
   
   // Block interaction
   registerBlockTools()
+  registerCollectionTools()
+  registerSurvivalTools()
   
   // Information tools
   registerInfoTools()
+
   
   // Inventory tools
   registerInventoryTools()

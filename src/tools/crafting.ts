@@ -1,3 +1,6 @@
+import pkg from 'mineflayer-pathfinder'
+const { Movements, goals } = pkg
+import { Vec3 } from 'vec3'
 import { z } from 'zod'
 import { botState, server } from '../server.js'
 import {
@@ -11,77 +14,43 @@ export function registerCraftingTools() {
   // Tool to get available recipes
   server.tool(
     'getRecipes',
-    'Get a list of available crafting recipes',
+    'Get a list of available crafting recipes for a specific item',
     {
-      filter: z.string().optional().describe('Filter recipes by item name'),
+      itemName: z.string().describe('Name of the item to check recipes for (e.g. "stick", "iron_pickaxe")'),
     },
-    async ({ filter }) => {
+    async ({ itemName }) => {
       if (!botState.isConnected || !botState.bot) {
         return createNotConnectedResponse()
       }
 
       try {
-        // In mineflayer API, first parameter should be itemType (number), not filter string
-        // Using a regex match or 0 as a wildcard for all items
-        const itemType = filter ? 0 : 0 // 0 is used as a wildcard
-        const recipes = botState.bot.recipesFor(itemType, null, null, null)
+        const bot = botState.bot
+        const item = bot.registry.itemsByName[itemName.toLowerCase()]
+        
+        if (!item) {
+             return createErrorResponse(`Item "${itemName}" is not known to the server. Check spelling?`)
+        }
+
+        const recipes = bot.recipesFor(item.id, null, 1, null)
 
         if (recipes.length === 0) {
           return createSuccessResponse(
-            filter
-              ? `No recipes found for "${filter}".`
-              : 'No recipes available.'
+            `No recipes found for "${itemName}". You might lack ingredients or it cannot be crafted.`
           )
         }
 
-        // Group recipes by output item
-        type RecipeGroups = Record<string, Array<any>>
-        const groupedRecipes: RecipeGroups = {}
-        recipes.forEach((recipe) => {
-          const outputName =
-            recipe.result &&
-            typeof recipe.result === 'object' &&
-            'name' in recipe.result
-              ? recipe.result.name
-              : 'Unknown'
-
-          // Use type assertion to help TypeScript understand the key is valid
-          const key = outputName as string
-          if (!groupedRecipes[key]) {
-            groupedRecipes[key] = []
-          }
-          groupedRecipes[key].push(recipe)
+        let response = `Found ${recipes.length} recipe(s) for ${itemName}:\n`
+        
+        recipes.forEach((recipe, idx) => {
+             response += `\nRecipe #${idx + 1} (${recipe.requiresTable ? 'Requires Crafting Table' : 'Inventory Crafting'}):\n`
+             if (recipe.inShape) {
+                 response += "  Shape: (Shaped recipe details omitted for brevity)\n"
+             }
+             if (recipe.ingredients) {
+                 response += "  Ingredients:\n"
+                 response += "  - (Complex recipe structure)\n"
+             }
         })
-
-        // Format the response
-        let response = filter
-          ? `Available recipes for "${filter}":\n\n`
-          : `Available recipes (${recipes.length}):\n\n`
-
-        for (const [output, recipes] of Object.entries(groupedRecipes)) {
-          response += `${output} (${recipes.length} recipe${
-            recipes.length > 1 ? 's' : ''
-          }):\n`
-
-          recipes.forEach((recipe, index) => {
-            response += `  Recipe ${index + 1}:\n`
-
-            // Add ingredients
-            if (
-              recipe.ingredients &&
-              Array.isArray(recipe.ingredients) &&
-              recipe.ingredients.length > 0
-            ) {
-              response += '    Ingredients:\n'
-              recipe.ingredients.forEach((item: any) => {
-                const count = item.count || 1
-                response += `      - ${item.name} x${count}\n`
-              })
-            }
-
-            response += '\n'
-          })
-        }
 
         return createSuccessResponse(response)
       } catch (error) {
@@ -93,7 +62,7 @@ export function registerCraftingTools() {
   // Tool to craft an item
   server.tool(
     'craftItem',
-    'Craft an item using available materials',
+    'Craft an item using available materials. Automatically finds OR PLACES a crafting table if needed.',
     {
       itemName: z.string().describe('Name of the item to craft'),
       count: z
@@ -101,29 +70,100 @@ export function registerCraftingTools() {
         .optional()
         .default(1)
         .describe('Number of items to craft'),
+      announcement: z.string().optional().describe('Natural language message to say in chat before crafting (e.g. "Making an iron sword for you!")'),
     },
-    async ({ itemName, count }) => {
+    async ({ itemName, count, announcement }) => {
       if (!botState.isConnected || !botState.bot) {
         return createNotConnectedResponse()
       }
 
       try {
-        // For crafting, we need to get the itemType from a name lookup or approximate it
-        // This is a simple workaround - ideally, we'd have a proper mapping of names to IDs
-        const itemType = 0 // Using 0 as a wildcard to get all recipes
-        const recipes = botState.bot.recipesFor(itemType, null, count, null)
+        const bot = botState.bot
+
+        if (announcement) {
+            bot.chat(announcement)
+        }
+
+        const item = bot.registry.itemsByName[itemName.toLowerCase()]
+        
+        if (!item) {
+             return createErrorResponse(`Item "${itemName}" is not known.`)
+        }
+
+        // Find recipes for this item
+        const recipes = bot.recipesFor(item.id, null, 1, null) 
 
         if (recipes.length === 0) {
           return createSuccessResponse(
-            `No recipes found for "${itemName}" or insufficient materials.`
+            `No craftable recipes found for "${itemName}". You likely missing ingredients.`
           )
         }
 
-        // Choose the first available recipe
         const recipe = recipes[0]
+        
+        let craftingTable = null
+        if (recipe.requiresTable) {
+            // 1. Search for existing table
+            const tableBlock = bot.findBlock({
+                matching: bot.registry.blocksByName['crafting_table'].id,
+                maxDistance: 32
+            })
+            
+            if (tableBlock) {
+                // Move to existing table
+                const movements = new Movements(bot)
+                bot.pathfinder.setMovements(movements)
+                const goal = new goals.GoalBlock(tableBlock.position.x, tableBlock.position.y, tableBlock.position.z)
+                await bot.pathfinder.goto(goal)
+                craftingTable = tableBlock
+            } else {
+                // 2. No table found, check inventory for one
+                const tableItem = bot.inventory.items().find(i => i.name === 'crafting_table')
+                
+                if (tableItem) {
+                    // Place the table
+                    // Find a solid block to place it on/against
+                    const placeRef = bot.findBlock({
+                        matching: (blk) => blk.boundingBox === 'block' && blk.name !== 'crafting_table',
+                        maxDistance: 4
+                    })
+
+                    if (!placeRef) {
+                         return createErrorResponse("Need a crafting table but cannot find a place to put it (no solid blocks nearby).")
+                    }
+
+                    // Equip table
+                    await bot.equip(tableItem, 'hand')
+                    
+                    // Try to place it
+                    // Calculate placement vector (face)
+                    const face = new Vec3(0, 1, 0) // Try placing on top first
+                    
+                    try {
+                        await bot.placeBlock(placeRef, face)
+                        // Wait a moment for block update
+                        await new Promise(r => setTimeout(r, 500))
+                        
+                        // Find the placed table
+                        craftingTable = bot.findBlock({
+                            matching: bot.registry.blocksByName['crafting_table'].id,
+                            maxDistance: 5
+                        })
+                        
+                        if (!craftingTable) throw new Error("Placed table but couldn't find it.")
+                            
+                    } catch (err) {
+                        return createErrorResponse(`Failed to place crafting table: ${err}`)
+                    }
+
+                } else {
+                    return createErrorResponse(`Recipe for ${itemName} requires a Crafting Table. None nearby, and you don't have one in inventory.`)
+                }
+            }
+        }
 
         // Craft the item
-        await botState.bot.craft(recipe, count)
+        await bot.craft(recipe, count, craftingTable || undefined)
 
         return createSuccessResponse(
           `Successfully crafted ${count} x ${itemName}`

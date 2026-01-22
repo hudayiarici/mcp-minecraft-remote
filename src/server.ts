@@ -13,6 +13,8 @@ export const botState: BotState = {
     version: '',
   },
   currentContainer: null,
+  lastDeath: null,
+  chatHistory: [],
 }
 
 // Create server instance

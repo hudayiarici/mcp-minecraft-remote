@@ -29,6 +29,15 @@ export interface BotState {
   isConnected: boolean
   connectionInfo: ConnectionInfo
   currentContainer: Container | null
+  lastDeath: {
+    position: any
+    time: Date
+  } | null
+  chatHistory: Array<{
+    sender: string
+    message: string
+    timestamp: Date
+  }>
 
   // Added properties to extend bot state tracking
   [key: string]: any // Allow dynamic properties for extended functionality
