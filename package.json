@@ -44,7 +44,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.25.1",
+    "@modelcontextprotocol/sdk": "^1.26.0",
     "mineflayer": "^4.33.0",
     "mineflayer-pathfinder": "^2.4.5",
     "zod": "^4.0.5"
